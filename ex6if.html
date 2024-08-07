@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3"></script>
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+</head>
+<body>
+조건부 렌더링을 위한 v-if 연습
+<hr>
+<div id="app">
+    <p v-if="season">⛱️Summer⛱️</p>
+    <p v-else>⛄Winter☃️</p>
+    <button @click = "season = !season" class="btn btn-success">결과 바꾸기</button>
+
+    <!-- 조건, 반복 렌더링을 할 때 유용한 특수 html tag : template template 안에 있는 내용이 렌더링 안에 있는 것을 하나로 묶어주기 위한 틀 -->
+    <template v-if="season">
+        <p>옷 입기가 편해</p>
+        <p>벌레가 ㅠㅠ</p>
+    </template>
+    <template v-else>
+        <p>벌레 안녕~</p>
+        <p>멋진 패션 구사</p>
+        <p>❄️❄️눈 구경하기</p>
+    </template>
+    <br/>
+    <span v-show="season">  <!-- v-show는 템플릿에서 쓸 수 없어. 템플릿에서는 v-if만 쓸 수 있어. -->
+        <p>야~ 여름이다~~~</p>
+    </span>
+    <!-- v-if, v-show의 차이 -->
+    <p v-if="season">여름 만세 - false인 경우 코드가 제거</p><!-- 코드 자체가 사라져 -->
+    <p v-show="season">여름 만세 - false인 경우 display:none</p> <!-- 안보이는걸로 렌더링 -->
+
+    <hr>
+    <label><input type="checkbox" v-model="myVisible" /> 체크박스 표시</label>
+    <p v-if="myVisible">Check on</p>
+    <p v-else>Check off</p>
+
+    <!-- count 값에 따른 조건부 렌더링 -->
+    <p v-if="count === 10">{{ count }}번 클릭!! 버튼 비활성화</p>
+    <p v-else-if="count >= 1">현재 클릭 횟수 : {{ count }}</p>
+    <p v-else>버튼을 클릭하세요!</p>
+
+    <button v-bind:disabled="count === 10" @click="addFunc">🐾</button>
+</div>
+
+<script>
+    const {createApp} = Vue;
+
+    createApp({
+        data(){
+            return{
+                season:true,    // true(여름), false(겨울)
+                myVisible:false,    // checkbox 상태 초기화 false면 체크가 안되고 true면 체크.
+                count:0
+            };
+        },
+        methods: {
+            addFunc(){
+                this.count++;
+            }
+        }
+    }).mount('#app');
+</script>
+
+</body>
+</html>

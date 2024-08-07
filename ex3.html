@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3"></script>
+</head>
+<body>
+빌트인 디렉티브 : HTML 태그 안에 들어가는 속성 역할을 하며, v-라는 접두어가 붙는다.
+<br>
+디렉티브는 DOM 엘리먼트가 뭔가를 수행하도록 지시하는 특수한 토큰이다.
+<div id="app">
+    🤨<a href="{{ link }}">Daum으로 링크 (ERROR)</a><br>
+    <!-- directive 사용 : 동적으로 href 속성을 vue 인스턴스의 link 데이터 속성과 연결 -->
+    😃<a v-bind:href="link">Daum으로 링크</a><br/>
+    😄<a :href="link">Daum으로 링크</a><!-- v-bind 생략 가능 -->
+    <img v-bind:src="imageSrc" alt="동적 이미지" />
+    <br/>
+    <h2 v-text="say"></h2>
+    <h2>data 속성값1 : {{say}}</h2>
+    <h2 v-once="say">data 속성값2 : {{say}}</h2><!-- v-text, v-once 같음. v-text는 값이 바뀌면 여러번 수행. v-once는 바껴도 한번만 수행.-->
+    <h3>함수 호출 결과 : {{sayFunc()}}</h3>
+
+    <span v-text="aLinkNaver">문자열 그대로 출력(innerText)</span><br/><!-- directive text는 문자열로 취급-->
+    <span v-html="aLinkNaver">링크 적용(innerHtml)</span><br>
+    
+    <!-- 양방향 데이터 바인딩 : v-model은 v-bind + v-on -->
+    이름은 <input type="text" v-model="name" /> {{ name }}<br/>
+    이름은 <input type="text" v-bind:value="name" v-on:input="changeName" /> {{ name }}<br/>
+    이름은 <input type="text" :value="name" @input="changeName" /> {{ name }}<br/> <!-- v-on과 @은 같다. v-bind는 생략 가능하다. -->
+
+    <hr/>
+    <!-- 계산된 프로퍼티 관련 -->
+    a = {{a}}, b = {{b}}<br/>
+    a값 입력 : <input type="text" v-model="a" />
+    <br/>입력된 a : {{a}} (타입 : {{typeof a}})<br/>
+    a값 입력 : <input type="text" v-model.number="a" />
+    
+    <hr/>
+    제어문 : 조건판단문 if<br/>
+    <h2 v-if="age > 20">age가 20 초과</h2>
+    <h2 v-else-if="age === 20">age가 20 이네요</h2>
+    <h2 v-else>age가 20 미만</h2>
+
+    <br/>
+    제어문 : 반복문 for<br/>
+    <h3>🎵 해골바가지</h3>
+    <ol>
+        <li v-for="(todo, index) in todos" :key="index">{{todo.msg}}</li>
+    </ol>
+    <ul>
+        <li v-for="(todo, index) in todos" :key="index">{{index + 1}}) {{todo.msg}}</li>
+    </ul>
+</div>
+
+<script>
+    const {createApp} = Vue;
+
+    createApp({
+        data(){
+            return{
+                link:'https://cafe.daum.net/flowlife',
+                imageSrc:'google.png',
+                say:'Daum',
+                aLinkNaver:"<a href='https://naver.com'>가자! Naver로..</a>",
+                name:'🦜',
+
+                a:'1',  // a는 문자열 데이터
+                age:26, // 26은 숫자
+       
+                todos : [
+                    {msg:'아침 먹고 땡'},
+                    {msg:'점심 먹고 땡'},
+                    {msg:'해골 완성 💀'},
+                ],
+            }
+        },
+        methods: {
+            sayFunc(){
+                this.say = '더위 절정';
+                return this.say;
+            },
+            changeName(e){
+                this.name = e.target.value;
+            }
+        },
+        computed:{  // computed properties : 함수처럼 작동. 차이는 계산된 프로퍼티가 의존하는 요소가 변경되면 반응
+            b(){
+                return this.a + 1;
+            }
+        }
+    }).mount('#app')
+</script>
+</body>
+</html>
