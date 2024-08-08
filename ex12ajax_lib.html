@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3"></script>
+</head>
+<body>
+    <div class="gtranslate_wrapper">
+        <script>window.gtranslateSettings = {"default_language":"ko","detect_browser_language":true,"languages":["es","de","th","mn","ar","ko","en","ja","zh-CN"],"wrapper_selector":".gtranslate_wrapper","flag_size":24,"horizontal_position":"right","vertical_position":"top"}</script>
+        <script src="https://cdn.gtranslate.net/widgets/latest/flags.js" defer></script>
+    </div>
+    <div id="app">
+        <button @click="fetchData">Ajax로 도서관 자료 읽기</button>
+        <button @click="clearData">자료 지우기</button>
+
+        <div v-for="(lib, index) in libraries" :key="index">
+            <h3>🎄 {{lib.LBRRY_NAME}} 🌲</h3>
+            주소 : {{lib.ADRES}}<br>
+            ☎️ {{lib.TEL_NO}}<hr>
+        </div>
+    </div>
+    <script>
+        const {createApp} = Vue;
+
+        createApp({
+            data(){
+                return{
+                    libraries:[]
+                }
+            },
+            methods: {
+                fetchData(){
+                    fetch('https://raw.githubusercontent.com/pykwon/python/master/seoullibtime5.json')// 전통적인 방법은 코드가 너무 길고, axios는 라이브러리를 또 갖다 써야되자낭
+                    .then(response => { // 서버한테 보내주는거지~
+                        if(!response.ok) {
+                            throw new Error('Ajax 에러')
+                        }
+                        return response.json();
+                    })
+                    .then(json => {
+                        this.libraries = json.SeoulLibraryTime.row;
+                    })
+                    .catch(error => {
+                        console.log('읽기 오류 : ', error);
+                    });
+                },
+                clearData(){
+                    this.libraries = [];    // 배열을 비워버리니까 데이터가 없겠지~
+                }
+            },
+        }).mount('#app')
+    </script>
+</body>
+</html>

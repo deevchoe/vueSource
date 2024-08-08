@@ -1,3 +1,4 @@
+//즉시 실행함수: 다른 스코프에 노출되지 않고 실행이 가능함
 (function(){
     const {createApp} = Vue;
 
